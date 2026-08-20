@@ -1,0 +1,10 @@
+.nfwc-product-fields{margin:18px 0 20px;padding:18px;border:1px solid rgba(0,0,0,.1);border-radius:14px;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.04)}
+.nfwc-product-fields__header{display:flex;flex-direction:column;gap:3px;margin-bottom:14px}
+.nfwc-product-fields__header strong{font-size:16px;line-height:1.3}.nfwc-product-fields__header span{font-size:13px;color:#667085}
+.nfwc-customer-note{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:10px 12px;margin-bottom:14px;color:#344054}
+.nfwc-field-row{margin-bottom:14px!important}.nfwc-field-row label{display:block;font-weight:600;margin-bottom:6px}.nfwc-field-row input,.nfwc-field-row textarea{width:100%;border-radius:10px;padding:10px 12px}.nfwc-field-row small,.nfwc-help-text{display:block;margin-top:6px;font-size:12px;color:#667085}.nfwc-drip-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.nfwc-customer-status{margin-top:8px;font-size:.95em;padding:8px 10px;border-radius:10px;background:#f8fafc;display:inline-block}
+@media(max-width:640px){.nfwc-drip-grid{grid-template-columns:1fr}.nfwc-product-fields{padding:14px;border-radius:12px}}
+
+.nfwc-price-calculator{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding:12px 14px;border-radius:12px;background:#f8fafc;border:1px solid #e5e7eb}
+.nfwc-price-calculator span{font-size:13px;color:#667085;font-weight:600}
+.nfwc-price-calculator strong{font-size:18px;line-height:1.2}
